@@ -52,10 +52,13 @@
         text = range.toString();
         var font = document.createElement('font');
         font.textContent = text;
-        font.color = 'red';
+        font.color = '#' + parseInt(Math.random() * 10000 + 9999);
+
 
         // 先把需要的部份 Clone 出來
         var editingFlag = range.cloneContents();
+        // editingFlag.textContent;
+        console.log(editingFlag.textContenttextContent.replace(/\n/g,'<br />'));
         // // var br = document.createElement('br');
         // // debugger;
         // // range.setStartAfter(br);
@@ -75,9 +78,9 @@
 
         // // for(var node = range.startContainer; node; )
 
-        debugger;
-        // range.deleteContents();
-        // range.insertNode(font);
+        // debugger;
+        range.deleteContents();
+        range.insertNode(font);
     };
 </script>
 </html>
