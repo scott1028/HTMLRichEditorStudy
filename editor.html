@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <button onclick="bClick(this)">B</button>
+    <button>U</button>
+    <button>C</button>
+    <div
+        contenteditable
+        style="width: 500px; height: 500px; background-color: lightgrey;">
+
+        <div>312<span style="color: red;">32</span>1</div>
+        <h4>3123213</h4>
+        31232
+    </div>
+    <pre>
+        节点编号：   节点名称：
+        1   Element
+        2   Attribute
+        3   Text
+        4   CDATA Section
+        5   Entity Reference
+        6   Entity
+        7   Processing Instrucion
+        8   Comment
+        9   Document
+        10  Document Type
+        11  Document Fragment
+        12  Notation
+    </pre>
+</body>
+<script>
+    // current Selection
+    var select = getSelection();
+
+    // this Editor
+    var rootNode = document.querySelector('div');
+
+    // start to make style
+    var bClick = function(self){
+
+        // make first node in Element DOM
+        // var div = document.createElement('div');
+        // div.appendChild(rootNode.firstChild.cloneNode());
+        // rootNode.replaceChild(div, rootNode.firstChild);
+
+
+        var range = select.getRangeAt(0);
+        // debugger;
+        text = range.toString();
+        var font = document.createElement('font');
+        font.textContent = text;
+        font.color = 'red';
+
+        // 先把需要的部份 Clone 出來
+        var editingFlag = range.cloneContents();
+        // // var br = document.createElement('br');
+        // // debugger;
+        // // range.setStartAfter(br);
+        // // range.setEndAfter(br);
+        // // range.collapse(false);
+        // // select.removeAllRanges();
+        // // select.addRange(range);
+        // var startNode = range.startContainer;
+        // var endNode = range.endContainer;
+        // debugger;
+
+        // var setAllDomStyle = function(startNode, endNode){
+        //     startNode.nodeType
+        // }
+        // // range.startContainer.parentElement.childNodes[0]
+        // // range.endContainer.parentElement.childNodes[0];
+
+        // // for(var node = range.startContainer; node; )
+
+        debugger;
+        // range.deleteContents();
+        // range.insertNode(font);
+    };
+</script>
+</html>
