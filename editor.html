@@ -11,7 +11,6 @@
     <div
         contenteditable
         style="width: 500px; height: 500px; background-color: lightgrey;">
-
         <h3><span style="color: blue;">312</span><span style="color: red;">32</span>1</h3>
         <h4>3123213</h4>
         31232
@@ -31,6 +30,8 @@
         10  Document Type
         11  Document Fragment
         12  Notation
+
+        ref: http://cqh520llr.iteye.com/blog/1881896
     </pre>
 </body>
 <script>
@@ -39,24 +40,6 @@
 
     // this Editor
     var rootNode = document.querySelector('div');
-
-
-    //
-    // var clearNode = function(nodeFlag, defaultParent){
-    //     var defaultParentList = [];
-    //     var childNodeList = [];
-
-    //     for(var i = 0; i < nodeFlag.childNodes.length; i++){
-    //         if(nodeFlag.childNodes[i].nodeType === 1){
-    //             childNodeList.push(nodeFlag.childNodes[i]);
-    //         }
-    //         else if(nodeFlag.childNodes[i].nodeType === 3){
-    //             defaultParentList.push(defaultParent);
-    //         }
-    //     }
-
-    //     if(defaultParentList.length != 0) return defaultParent;
-    // };
 
 
     // start to make style
@@ -96,10 +79,42 @@
 
         while(treeWalker.nextNode()) nodeList.push(treeWalker.currentNode);
 
+        var range = select.getRangeAt(0);
 
-        for(var i = 0; i < nodeList.length; i++){
-            console.log(nodeList[i]);
+        var flag = false;
+
+        var $s = nodeList.indexOf(range.startContainer);
+        var $e = nodeList.indexOf(range.endContainer);
+
+        for(var i = $s; i <= $e; i++){
+            if(nodeList[i].parentNode !== rootNode){
+                // if parentNode is not rootNode make parent style is ok.
+                nodeList[i].parentNode.style.color = 'red';
+            }
+            else{
+                // make textNode to fontNode
+                font = document.createElement('font');
+                font.style.color = 'red';
+                font.textContent = nodeList[i].nodeValue;
+                nodeList[i].parentNode.insertBefore(font, nodeList[i]);
+                nodeList[i].remove();
+                continue;
+            }
         }
+
+        // for(var i = 0; i < nodeList.length; i++){
+            // if(nodeList[i] === range.startContainer){
+            //     console.log(i, nodeList[i], nodeList[i].parentNode, range.startContainer, range.endContainer);
+            // }
+            // else if(nodeList[i] === range.endContainer){
+            //     console.log(i, nodeList[i], nodeList[i].parentNode, range.startContainer, range.endContainer);
+            //     break;
+            // }
+
+
+            // nodeList[i].nodeValue = '';              // equal parentNode.textContent = '';
+        // }
+        // debugger;
     }
 </script>
 </html>
