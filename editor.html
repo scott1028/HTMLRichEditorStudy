@@ -5,15 +5,17 @@
 </head>
 <body>
     <button onclick="bClick(this)">B</button>
-    <button>U</button>
+    <button onclick="bClick2(this)">B2</button>
+    <button onclick="uClick(this)">U</button>
     <button>C</button>
     <div
         contenteditable
         style="width: 500px; height: 500px; background-color: lightgrey;">
 
-        <div>312<span style="color: red;">32</span>1</div>
+        <h3><span style="color: blue;">312</span><span style="color: red;">32</span>1</h3>
         <h4>3123213</h4>
         31232
+        <div>abcdefg</div>
     </div>
     <pre>
         节点编号：   节点名称：
@@ -38,49 +40,66 @@
     // this Editor
     var rootNode = document.querySelector('div');
 
+
+    //
+    // var clearNode = function(nodeFlag, defaultParent){
+    //     var defaultParentList = [];
+    //     var childNodeList = [];
+
+    //     for(var i = 0; i < nodeFlag.childNodes.length; i++){
+    //         if(nodeFlag.childNodes[i].nodeType === 1){
+    //             childNodeList.push(nodeFlag.childNodes[i]);
+    //         }
+    //         else if(nodeFlag.childNodes[i].nodeType === 3){
+    //             defaultParentList.push(defaultParent);
+    //         }
+    //     }
+
+    //     if(defaultParentList.length != 0) return defaultParent;
+    // };
+
+
     // start to make style
     var bClick = function(self){
-
-        // make first node in Element DOM
-        // var div = document.createElement('div');
-        // div.appendChild(rootNode.firstChild.cloneNode());
-        // rootNode.replaceChild(div, rootNode.firstChild);
-
-
         var range = select.getRangeAt(0);
-        // debugger;
         text = range.toString();
-        var font = document.createElement('font');
-        font.textContent = text;
-        font.color = '#' + parseInt(Math.random() * 10000 + 9999);
-
-
-        // 先把需要的部份 Clone 出來
+        var strong = document.createElement('strong');
         var editingFlag = range.cloneContents();
-        // editingFlag.textContent;
-        console.log(editingFlag.textContenttextContent.replace(/\n/g,'<br />'));
-        // // var br = document.createElement('br');
-        // // debugger;
-        // // range.setStartAfter(br);
-        // // range.setEndAfter(br);
-        // // range.collapse(false);
-        // // select.removeAllRanges();
-        // // select.addRange(range);
-        // var startNode = range.startContainer;
-        // var endNode = range.endContainer;
-        // debugger;
-
-        // var setAllDomStyle = function(startNode, endNode){
-        //     startNode.nodeType
-        // }
-        // // range.startContainer.parentElement.childNodes[0]
-        // // range.endContainer.parentElement.childNodes[0];
-
-        // // for(var node = range.startContainer; node; )
-
-        // debugger;
+        debugger;
+        // clearNode(editingFlag, strong)
+        strong.appendChild(editingFlag);
         range.deleteContents();
-        range.insertNode(font);
+        range.insertNode(strong);
     };
+
+
+    //
+    var uClick = function(self){
+        var range = select.getRangeAt(0);
+        text = range.toString();
+        var em = document.createElement('em');
+        var editingFlag = range.cloneContents();
+        em.appendChild(editingFlag, em);
+        range.deleteContents();
+        range.insertNode(em);
+    };
+
+
+    //
+    var bClick2 = function(self){
+        var treeWalker = document.createTreeWalker(
+          rootNode,
+          NodeFilter.SHOW_TEXT
+        );
+
+        var nodeList = [];
+
+        while(treeWalker.nextNode()) nodeList.push(treeWalker.currentNode);
+
+
+        for(var i = 0; i < nodeList.length; i++){
+            console.log(nodeList[i]);
+        }
+    }
 </script>
 </html>
