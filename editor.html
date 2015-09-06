@@ -92,6 +92,9 @@
             if(nodeList[i].parentNode !== rootNode){
                 // if parentNode is not rootNode make parent style is ok.
                 nodeList[i].parentNode.style.color = 'red';
+
+                // startNode start index 非 0 的時候需要切割 parentNode 成兩個
+                // 前半段保持原本的 node 但是 textContent 必須被截斷一部分作為 sub Node 的內文
             }
             else{
                 // make textNode to fontNode
@@ -100,6 +103,9 @@
                 font.textContent = nodeList[i].nodeValue;
                 nodeList[i].parentNode.insertBefore(font, nodeList[i]);
                 nodeList[i].remove();
+
+                // endNode start index 非 contentLength 的時候需要切割 parentNode 成兩個
+                // 後半段保持原本的 node 但是 前半段 textContent 必須被截斷一部分作為 sub Node 的內文
                 continue;
             }
         }
