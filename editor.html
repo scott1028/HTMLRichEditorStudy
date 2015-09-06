@@ -86,6 +86,8 @@
         var $s = nodeList.indexOf(range.startContainer);
         var $e = nodeList.indexOf(range.endContainer);
 
+
+        // 會需要 textNode 切割與轉換成 domNode
         for(var i = $s; i <= $e; i++){
             if(nodeList[i].parentNode !== rootNode){
                 // if parentNode is not rootNode make parent style is ok.
