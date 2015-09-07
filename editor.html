@@ -101,6 +101,10 @@ var bClick = function(self) {
         nodeList[i].parentNode.insertBefore(font, nodeList[i]);
         nodeList[i].remove();
     }
+
+
+    // add clearNode Logic
+    clearNode();
 }
 bClick.color = true;
 </script>
@@ -130,8 +134,11 @@ var clearNode = function() {
     var nodeList = [];
     while (treeWalker.nextNode()) nodeList.push(treeWalker.currentNode);
 
+
+
     for (var i = 0; i < nodeList.length; i++) {
         if (nodeList[i].textContent.length === 0) {
+            debugger;
             nodeList[i].remove();
         }
     }
