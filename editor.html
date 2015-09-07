@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title></title>
 </head>
+
 <body>
     <button onclick="bClick(this)" style="color: red;">Change Color</button>
     <button onclick="uClick(this)">U</button>
     <button>C</button>
-    <div
-        contenteditable
-        style="width: 500px; height: 500px; background-color: lightgrey; word-wrap:break-word;">
+    <div contenteditable style="width: 500px; height: 100px; background-color: lightgrey; word-wrap:break-word;">
         <div>First Line#A</div>
         <div>First Line#B</div>
         First Line#C
@@ -36,87 +36,128 @@
     </pre>
 </body>
 <script>
-    // current Selection
-    var select = getSelection();
+// current Selection
+var select = getSelection();
 
-    // this Editor
-    var rootNode = document.querySelector('div');
+// this Editor
+var rootNode = document.querySelector('div');
+
+//
+var uClick = function(self) {
+    var range = select.getRangeAt(0);
+    text = range.toString();
+    var em = document.createElement('em');
+    var editingFlag = range.cloneContents();
+    em.appendChild(editingFlag, em);
+    range.deleteContents();
+    range.insertNode(em);
+};
+
+
+//
+var bClick = function(self) {
+    var color;
+
+    if (bClick.color) {
+        color = 'red';
+        self.style.color = 'blue';
+    } else {
+        color = 'blue';
+        self.style.color = 'red';
+    }
+    bClick.color = !bClick.color;
+
 
     //
-    var uClick = function(self){
-        var range = select.getRangeAt(0);
-        text = range.toString();
-        var em = document.createElement('em');
-        var editingFlag = range.cloneContents();
-        em.appendChild(editingFlag, em);
-        range.deleteContents();
-        range.insertNode(em);
-    };
+    var range = select.getRangeAt(0);
+    var treeWalker = document.createTreeWalker(
+        rootNode,
+        NodeFilter.SHOW_TEXT
+    );
+    var nodeList = [];
+    while (treeWalker.nextNode()) nodeList.push(treeWalker.currentNode);
 
 
     //
-    var bClick = function(self){
-        var color;
+    var $s = nodeList.indexOf(range.startContainer);
+    var $e = nodeList.indexOf(range.endContainer);
 
-        if(bClick.color){
-            color = 'red';
-            self.style.color = 'blue';
+
+    // get all textNode, except startNode, endNode
+    for (var i = $s; i <= $e; i++) {
+        if (i === $s) {
+            // 本來的值會變成前半段, 回傳被切割的後半段
+            nodeList[i] = nodeList[i].splitText(range.startOffset);
         }
-        else{
-            color = 'blue';
-            self.style.color = 'red';
+
+        if (i === $e) {
+            // 本來的值會變成前半段, 回傳後半段不處理
+            nodeList[i].splitText(range.endOffset);
         }
-        bClick.color = !bClick.color;
 
-        
-        //
-        var range = select.getRangeAt(0);
-        var treeWalker = document.createTreeWalker(
-            rootNode,
-            NodeFilter.SHOW_TEXT
-        );
-        var nodeList = [];
-        while(treeWalker.nextNode()) nodeList.push(treeWalker.currentNode);
+        font = document.createElement('font');
+        font.style.color = color;
+        font.textContent = nodeList[i].nodeValue;
+        nodeList[i].parentNode.insertBefore(font, nodeList[i]);
+        nodeList[i].remove();
+    }
+}
+bClick.color = true;
+</script>
+<script>
+// start to make style
+var bClickTest = function(self) {
+    var range = select.getRangeAt(0);
+    text = range.toString();
+    var strong = document.createElement('strong');
+    var editingFlag = range.cloneContents();
+    debugger;
+    // clearNode(editingFlag, strong)
+    // strong.appendChild(editingFlag);
+    // range.deleteContents();
+    // range.insertNode(strong);
+};
 
 
-        //
-        var $s = nodeList.indexOf(range.startContainer);
-        var $e = nodeList.indexOf(range.endContainer);
+//
+var clearNode = function() {
+    var node = rootNode;
 
+    var treeWalker = document.createTreeWalker(
+        rootNode,
+        NodeFilter.SHOW_ELEMENT
+    );
+    var nodeList = [];
+    while (treeWalker.nextNode()) nodeList.push(treeWalker.currentNode);
 
-        // get all textNode, except startNode, endNode
-        for(var i = $s; i <= $e; i++){
-            if(i === $s){
-                // 本來的值會變成前半段, 回傳被切割的後半段
-                nodeList[i] = nodeList[i].splitText(range.startOffset);
-            }
-
-            if(i === $e){
-                // 本來的值會變成前半段, 回傳後半段不處理
-                nodeList[i].splitText(range.endOffset);
-            }
-
-            font = document.createElement('font');
-            font.style.color = color;
-            font.textContent = nodeList[i].nodeValue;
-            nodeList[i].parentNode.insertBefore(font, nodeList[i]);
+    for (var i = 0; i < nodeList.length; i++) {
+        if (nodeList[i].textContent.length === 0) {
             nodeList[i].remove();
         }
     }
-    bClick.color = true;
+}
 </script>
-<script>
-    // start to make style
-    var bClickTest = function(self){
-        var range = select.getRangeAt(0);
-        text = range.toString();
-        var strong = document.createElement('strong');
-        var editingFlag = range.cloneContents();
-        debugger;
-        // clearNode(editingFlag, strong)
-        // strong.appendChild(editingFlag);
-        // range.deleteContents();
-        // range.insertNode(strong);
-    };
-</script>
+
+<div debug>
+    <font style="color: blue;">
+        <font style="color: red;">
+            <font style="color: blue;">
+                <font style="color: red;">
+                    <font style="color: blue;">
+                        <font style="color: blue;">
+                            <font style="color: red;">
+                                <font style="color: blue;">
+                                    <font style="color: red;">Fi
+                                        <font style="color: blue;">rst Line#D</font>
+                                    </font>
+                                </font>
+                            </font>
+                        </font>
+                    </font>
+                </font>
+            </font>
+        </font>
+    </font>
+</div>
+
 </html>
