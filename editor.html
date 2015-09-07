@@ -11,15 +11,11 @@
     <div
         contenteditable
         style="width: 500px; height: 500px; background-color: lightgrey; word-wrap:break-word;">
-        312313
-        12312
-        312
-        321
-        321
-        <!-- <h3><span style="color: blue;">312</span><span style="color: red;">32</span>1</h3>
-        <h4>3123213</h4>
-        31232
-        <div>abcdefg</div> -->
+        <div>First Line#A</div>
+        <div>First Line#B</div>
+        First Line#C
+        <div>First Line#D</div>
+        <div>First Line#E</div>
     </div>
     <pre>
         节点编号：   节点名称：
@@ -76,25 +72,18 @@
 
     //
     var bClick2 = function(self){
+        var color = '';
+
+        if(bClick2.color){
+            color = 'red';
+        }
+        else{
+            color = 'blue';
+        }
+        bClick2.color = !bClick2.color;
+
         
         //
-        // var range = select.getRangeAt(0);
-        // var cloneFlag = range.cloneContents();
-        // var treeWalker = document.createTreeWalker(
-        //     cloneFlag,
-        //     NodeFilter.SHOW_TEXT
-        // );
-
-
-        // // This is a duplicate.
-        // var nodeList = [];
-
-        // // delete, because has cloned.
-        // debugger;
-        // range.deleteContents();
-        // rootNode.insertBefore(cloneFlag, range.endContainer);
-
-
         var range = select.getRangeAt(0);
         var treeWalker = document.createTreeWalker(
             rootNode,
@@ -104,68 +93,30 @@
         while(treeWalker.nextNode()) nodeList.push(treeWalker.currentNode);
 
 
-        // var flag = false;
-
+        //
         var $s = nodeList.indexOf(range.startContainer);
         var $e = nodeList.indexOf(range.endContainer);
 
 
         // get all textNode, except startNode, endNode
         for(var i = $s; i <= $e; i++){
-            if(nodeList[i].parentNode !== rootNode){
-                nodeList[i].parentNode.style.color = 'red';
+            if(i === $s){
+                // 本來的值會變成前半段, 回傳被切割的後半段
+                nodeList[i] = nodeList[i].splitText(range.startOffset);
             }
-            else{
-                font = document.createElement('font');
-                font.style.color = 'red';
-                font.textContent = nodeList[i].nodeValue;
-                nodeList[i].parentNode.insertBefore(font, nodeList[i]);
-                nodeList[i].remove();
-                continue;
+
+            if(i === $e){
+                // 本來的值會變成前半段, 回傳後半段不處理
+                nodeList[i].splitText(range.endOffset);
             }
+
+            font = document.createElement('font');
+            font.style.color = color;
+            font.textContent = nodeList[i].nodeValue;
+            nodeList[i].parentNode.insertBefore(font, nodeList[i]);
+            nodeList[i].remove();
         }
-
-
-        // //
-        // if(range.startOffset === 0){
-        //     if(range.startContainer.parentNode !== rootNode){
-        //         range.startContainer.parentNode.style.color = 'red';
-        //     }
-        //     else{
-        //         font = document.createElement('font');
-        //         font.style.color = 'red';
-        //         font.textContent = range.startContainer.nodeValue;
-        //         range.startContainer.parentNode.insertBefore(font, range.startContainer);
-        //         range.startContainer.remove();
-        //     }
-        // }
-        // else{
-        //     if(range.startContainer.parentNode !== rootNode){
-
-        //     }
-        //     else{
-
-        //     }
-        // }
-
-
-        // //
-        // range.startContainer.remove();
-        // range.endContainer.remove();
-
-        // for(var i = 0; i < nodeList.length; i++){
-            // if(nodeList[i] === range.startContainer){
-            //     console.log(i, nodeList[i], nodeList[i].parentNode, range.startContainer, range.endContainer);
-            // }
-            // else if(nodeList[i] === range.endContainer){
-            //     console.log(i, nodeList[i], nodeList[i].parentNode, range.startContainer, range.endContainer);
-            //     break;
-            // }
-
-
-            // nodeList[i].nodeValue = '';              // equal parentNode.textContent = '';
-        // }
-        // debugger;
     }
+    bClick2.color = true;
 </script>
 </html>
