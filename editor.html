@@ -4,8 +4,7 @@
     <title></title>
 </head>
 <body>
-    <button onclick="bClick(this)">B</button>
-    <button onclick="bClick2(this)">B2</button>
+    <button onclick="bClick(this)" style="color: red;">Change Color</button>
     <button onclick="uClick(this)">U</button>
     <button>C</button>
     <div
@@ -43,21 +42,6 @@
     // this Editor
     var rootNode = document.querySelector('div');
 
-
-    // start to make style
-    var bClick = function(self){
-        var range = select.getRangeAt(0);
-        text = range.toString();
-        var strong = document.createElement('strong');
-        var editingFlag = range.cloneContents();
-        debugger;
-        // clearNode(editingFlag, strong)
-        // strong.appendChild(editingFlag);
-        // range.deleteContents();
-        // range.insertNode(strong);
-    };
-
-
     //
     var uClick = function(self){
         var range = select.getRangeAt(0);
@@ -71,16 +55,18 @@
 
 
     //
-    var bClick2 = function(self){
-        var color = '';
+    var bClick = function(self){
+        var color;
 
-        if(bClick2.color){
+        if(bClick.color){
             color = 'red';
+            self.style.color = 'blue';
         }
         else{
             color = 'blue';
+            self.style.color = 'red';
         }
-        bClick2.color = !bClick2.color;
+        bClick.color = !bClick.color;
 
         
         //
@@ -117,6 +103,20 @@
             nodeList[i].remove();
         }
     }
-    bClick2.color = true;
+    bClick.color = true;
+</script>
+<script>
+    // start to make style
+    var bClickTest = function(self){
+        var range = select.getRangeAt(0);
+        text = range.toString();
+        var strong = document.createElement('strong');
+        var editingFlag = range.cloneContents();
+        debugger;
+        // clearNode(editingFlag, strong)
+        // strong.appendChild(editingFlag);
+        // range.deleteContents();
+        // range.insertNode(strong);
+    };
 </script>
 </html>
