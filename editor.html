@@ -38,6 +38,8 @@
 
         ref: http://cqh520llr.iteye.com/blog/1881896
         ref: https://developer.mozilla.org/en-US/docs/Web/API/Text/splitText (splitText 把 textNode 拆開分別控制)
+        # 真正寫編輯器設定樣式用到的核心 Method
+        (*)ref: https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand
     </pre>
 </body>
 <script>
@@ -57,7 +59,13 @@ var uClick = function(self) {
 
 
 //
-var bClick = function(self) {
+var bClick = function(self){
+    document.execCommand('fontsize', false, 12);
+}
+
+
+//
+var bClickTest = function(self) {
     var color;
 
     if (bClick.color) {
