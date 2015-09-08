@@ -170,9 +170,31 @@ var clearNode = function() {
 
 <script>
     document.querySelector('div[contenteditable]').onkeydown = function(e) {
-        // prevent default DIV for enter or wrap
-        e.preventDefault();
-        console.log('preventDefault');
+        if(e.ctrlKey !== true){
+            // prevent default DIV for enter or wrap
+            if(e.keyCode === 13){
+                e.preventDefault();
+                // getSelection().getRangeAt(0).startOffset
+
+                // no select, press enter directly.
+                if(getSelection().getRangeAt(0).startOffset === getSelection().getRangeAt(0).endOffset && getSelection().getRangeAt(0).startOffset > 0){
+                    var afterTextNode = getSelection().getRangeAt(0).startContainer.splitText(getSelection().getRangeAt(0).startOffset);
+                    var beforeTextNode = getSelection().getRangeAt(0).startContainer;
+                    var parentNode = afterTextNode.parentNode;
+                    var p = document.createElement('p');
+                    var afterP = p.cloneNode();
+                    var beforP = p.cloneNode();
+                    afterP.appendChild(afterTextNode.cloneNode());
+                    beforP.appendChild(beforeTextNode.cloneNode());
+                    parentNode.insertBefore(beforP, beforeTextNode);
+                    parentNode.insertBefore(afterP, afterTextNode);
+                    afterTextNode.remove();
+                    beforeTextNode.remove();                    
+                };
+
+            }
+            console.log('preventDefault');
+        }
     };
 </script>
 
