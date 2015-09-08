@@ -8,14 +8,22 @@
 </head>
 
 <body>
-    <div testdrop style="width: 50px; height: 50px; border-color: red; border-width: 1px; border-style: solid;"></div>
-    <br />
-    <button onclick="bClick(this)" style="color: red;">Change Color</button>
-    <button onclick="uClick(this)">U</button>
-    <button>C</button>
+    <button onclick="b1Click(this)">Large Size</button>
+    <button onclick="b2Click(this)">Normal Size</button>
+    <button onclick="b3Click(this)">Small Size</button>
+    <button onclick="b4Click(this)">Set to Red</button>
+    <button onclick="b5Click(this)">Set to Blue</button>
 
     <!-- My Editor -->
-    <div contenteditable style="width: 600px; height: 100px; background-color: lightgrey; word-wrap:break-word; padding: 5px; overflow-y: auto;"></div>
+    <div contenteditable style="width: 600px; height: 200px; background-color: lightgrey; word-wrap:break-word; padding: 5px; overflow-y: auto; margin: 5px;">
+        3123123123123123123123<br />
+        31232132<br />
+        <p>
+            31231231231
+        </p>
+        <div>3123123123</div>
+        <h4>99999</h4>
+    </div>
 
     <br />
 
@@ -41,183 +49,40 @@
         # 真正寫編輯器設定樣式用到的核心 Method
         (*)ref: https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand
     </pre>
+    <h4>Drop/Drag API Test</h4>
+    <div testdrop style="width: 50px; height: 50px; border-color: red; border-width: 1px; border-style: solid;"></div>
 </body>
 <script>
-// this Editor
-var rootNode = document.querySelector('div[contenteditable]');
 
 //
-var uClick = function(self) {
-    var range = getSelection().getRangeAt(0);
-    text = range.toString();
-    var em = document.createElement('em');
-    var editingFlag = range.cloneContents();
-    em.appendChild(editingFlag, em);
-    range.deleteContents();
-    range.insertNode(em);
-};
-
-
-//
-var bClick = function(self){
-    document.execCommand('fontsize', false, 12);
+var b1Click = function(self){
+    document.execCommand('fontsize', false, 5);
 }
 
 
 //
-var bClickTest = function(self) {
-    var color;
-
-    if (bClick.color) {
-        color = 'red';
-        self.style.color = 'blue';
-    } else {
-        color = 'blue';
-        self.style.color = 'red';
-    }
-    console.log('set to', color);
-    bClick.color = !bClick.color;
-
-
-    //
-    var range = getSelection().getRangeAt(0);
-    var treeWalker = document.createTreeWalker(
-        rootNode,
-        NodeFilter.SHOW_TEXT
-    );
-    var nodeList = [];
-    while (treeWalker.nextNode()) nodeList.push(treeWalker.currentNode);
-
-
-    //
-    var $s = nodeList.indexOf(range.startContainer);
-    var $e = nodeList.indexOf(range.endContainer);
-
-    console.log($s, $e);
-    debugger;
-
-
-    // get all textNode, except startNode, endNode
-    for (var i = $s; i <= $e; i++) {
-        if (i === $s) {
-            // 本來的值會變成前半段, 回傳被切割的後半段
-            nodeList[i] = nodeList[i].splitText(range.startOffset);
-        }
-
-        if (i === $e) {
-            // 本來的值會變成前半段, 回傳後半段不處理
-            nodeList[i].splitText(range.endOffset);
-        }
-
-        font = document.createElement('font');
-        font.style.color = color;
-        font.textContent = nodeList[i].nodeValue;
-        nodeList[i].parentNode.insertBefore(font, nodeList[i]);
-        nodeList[i].remove();
-    }
-
-
-    // add clearNode Logic
-    // clearNode();
+var b2Click = function(self){
+    document.execCommand('fontsize', false, 3);
 }
-bClick.color = true;
-</script>
-<script>
-// start to make style
-var bClickTest = function(self) {
-    var range = getSelection().getRangeAt(0);
-    text = range.toString();
-    var strong = document.createElement('strong');
-    var editingFlag = range.cloneContents();
-    debugger;
-    // clearNode(editingFlag, strong)
-    // strong.appendChild(editingFlag);
-    // range.deleteContents();
-    // range.insertNode(strong);
-};
 
 
 //
-var clearNode = function() {
-    var node = rootNode;
-
-    var treeWalker = document.createTreeWalker(
-        rootNode,
-        NodeFilter.SHOW_ELEMENT
-    );
-    var nodeList = [];
-    while (treeWalker.nextNode()) nodeList.push(treeWalker.currentNode);
-
-
-
-    for (var i = 0; i < nodeList.length; i++) {
-        if (nodeList[i].textContent.length === 0) {
-            // debugger;
-            nodeList[i].remove();
-        }
-    }
+var b3Click = function(self){
+    document.execCommand('fontsize', false, 1);
 }
-</script>
-
-<div debug>
-    <font style="color: blue;">
-        <font style="color: red;">
-            <font style="color: blue;">
-                <font style="color: red;">
-                    <font style="color: blue;">
-                        <font style="color: blue;">
-                            <font style="color: red;">
-                                <font style="color: blue;">
-                                    <font style="color: red;">Fi
-                                        <font style="color: blue;">rst Line#D</font>
-                                    </font>
-                                </font>
-                            </font>
-                        </font>
-                    </font>
-                </font>
-            </font>
-        </font>
-    </font>
-</div>
-
-<script>
-    // document.querySelector('div[contenteditable]').onkeydown = function(e) {
-
-    //     if(e.ctrlKey !== true){
-    //         if(getSelection().getRangeAt(0).startContainer === document.querySelector('div[contenteditable]')){
-    //             var p = document.createElement('p');
-    //             var beforP = p.cloneNode();
-    //             document.querySelector('div[contenteditable]').appendChild(beforP);
-    //             beforP.focus();
-    //         }
 
 
-    //         // prevent default DIV for enter or wrap
-    //         if(e.keyCode === 13){
-    //             e.preventDefault();
-    //             // getSelection().getRangeAt(0).startOffset
+//
+var b4Click = function(self){
+    document.execCommand('foreColor', false, 'red');
+}
 
-    //             // no select, press enter directly.
-    //             if(getSelection().getRangeAt(0).startOffset === getSelection().getRangeAt(0).endOffset && getSelection().getRangeAt(0).startOffset > 0){
-    //                 var afterTextNode = getSelection().getRangeAt(0).startContainer.splitText(getSelection().getRangeAt(0).startOffset);
-    //                 var beforeTextNode = getSelection().getRangeAt(0).startContainer;
-    //                 var parentNode = afterTextNode.parentNode;
-    //                 var p = document.createElement('p');
-    //                 var afterP = p.cloneNode();
-    //                 var beforP = p.cloneNode();
-    //                 afterP.appendChild(afterTextNode.cloneNode());
-    //                 beforP.appendChild(beforeTextNode.cloneNode());
-    //                 parentNode.insertBefore(beforP, beforeTextNode);
-    //                 parentNode.insertBefore(afterP, afterTextNode);
-    //                 afterTextNode.remove();
-    //                 beforeTextNode.remove();                    
-    //             };
 
-    //         }
-    //         console.log('preventDefault');
-    //     }
-    // };
+//
+var b5Click = function(self){
+    document.execCommand('foreColor', false, 'blue');
+}
+
 </script>
 <script>
     document.querySelector('div[testdrop]').ondrop = function(e){
