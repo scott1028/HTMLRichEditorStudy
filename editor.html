@@ -6,10 +6,13 @@
 </head>
 
 <body>
+    <div testdrop style="width: 50px; height: 50px; border-color: red; border-width: 1px; border-style: solid;"></div>
+    <br />
     <button onclick="bClick(this)" style="color: red;">Change Color</button>
     <button onclick="uClick(this)">U</button>
     <button>C</button>
     <div contenteditable style="width: 600px; height: 100px; background-color: lightgrey; word-wrap:break-word; padding: 5px; overflow-y: auto;">
+        <div></div>
 <!--         <div>First Line#A</div>
         <div>First Line#B</div>
         First Line#C
@@ -37,7 +40,7 @@
 </body>
 <script>
 // this Editor
-var rootNode = document.querySelector('div');
+var rootNode = document.querySelector('div[contenteditable]');
 
 //
 var uClick = function(self) {
@@ -206,5 +209,15 @@ var clearNode = function() {
         }
     };
 </script>
+<script>
+    document.querySelector('div[testdrop]').ondrop = function(e){
+        console.log(2);
+        e.preventDefault();
+        console.log(e.dataTransfer.getData('text'));
+    };
 
+    document.querySelector('div[testdrop]').ondragover = function(e){
+        e.preventDefault();
+    };
+</script>
 </html>
