@@ -36,15 +36,12 @@
     </pre>
 </body>
 <script>
-// current Selection
-var select = getSelection();
-
 // this Editor
 var rootNode = document.querySelector('div');
 
 //
 var uClick = function(self) {
-    var range = select.getRangeAt(0);
+    var range = getSelection().getRangeAt(0);
     text = range.toString();
     var em = document.createElement('em');
     var editingFlag = range.cloneContents();
@@ -65,11 +62,12 @@ var bClick = function(self) {
         color = 'blue';
         self.style.color = 'red';
     }
+    console.log('set to', color);
     bClick.color = !bClick.color;
 
 
     //
-    var range = select.getRangeAt(0);
+    var range = getSelection().getRangeAt(0);
     var treeWalker = document.createTreeWalker(
         rootNode,
         NodeFilter.SHOW_TEXT
@@ -81,6 +79,9 @@ var bClick = function(self) {
     //
     var $s = nodeList.indexOf(range.startContainer);
     var $e = nodeList.indexOf(range.endContainer);
+
+    console.log($s, $e);
+    debugger;
 
 
     // get all textNode, except startNode, endNode
@@ -104,14 +105,14 @@ var bClick = function(self) {
 
 
     // add clearNode Logic
-    clearNode();
+    // clearNode();
 }
 bClick.color = true;
 </script>
 <script>
 // start to make style
 var bClickTest = function(self) {
-    var range = select.getRangeAt(0);
+    var range = getSelection().getRangeAt(0);
     text = range.toString();
     var strong = document.createElement('strong');
     var editingFlag = range.cloneContents();
@@ -138,7 +139,7 @@ var clearNode = function() {
 
     for (var i = 0; i < nodeList.length; i++) {
         if (nodeList[i].textContent.length === 0) {
-            debugger;
+            // debugger;
             nodeList[i].remove();
         }
     }
@@ -166,5 +167,13 @@ var clearNode = function() {
         </font>
     </font>
 </div>
+
+<script>
+    document.querySelector('div[contenteditable]').onkeydown = function(e) {
+        // prevent default DIV for enter or wrap
+        e.preventDefault();
+        console.log('preventDefault');
+    };
+</script>
 
 </html>
