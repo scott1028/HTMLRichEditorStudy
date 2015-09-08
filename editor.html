@@ -9,12 +9,12 @@
     <button onclick="bClick(this)" style="color: red;">Change Color</button>
     <button onclick="uClick(this)">U</button>
     <button>C</button>
-    <div contenteditable style="width: 500px; height: 100px; background-color: lightgrey; word-wrap:break-word;">
-        <div>First Line#A</div>
+    <div contenteditable style="width: 600px; height: 100px; background-color: lightgrey; word-wrap:break-word; padding: 5px; overflow-y: auto;">
+<!--         <div>First Line#A</div>
         <div>First Line#B</div>
         First Line#C
         <div>First Line#D</div>
-        <div>First Line#E</div>
+        <div>First Line#E</div> -->
     </div>
     <pre>
         节点编号：   节点名称：
@@ -170,7 +170,16 @@ var clearNode = function() {
 
 <script>
     document.querySelector('div[contenteditable]').onkeydown = function(e) {
+
         if(e.ctrlKey !== true){
+            if(getSelection().getRangeAt(0).startContainer === document.querySelector('div[contenteditable]')){
+                var p = document.createElement('p');
+                var beforP = p.cloneNode();
+                document.querySelector('div[contenteditable]').appendChild(beforP);
+                beforP.focus();
+            }
+
+
             // prevent default DIV for enter or wrap
             if(e.keyCode === 13){
                 e.preventDefault();
