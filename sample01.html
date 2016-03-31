@@ -93,19 +93,31 @@ var b5Click = function(self){
     document.execCommand('foreColor', false, 'blue');
 }
 
+var _checkEditable = function(){
+    // 檢查是否 focus 在不可編輯的區域
+    if(document.querySelector('div[contenteditable]').contains(getSelection().anchorNode) === false){
+        alert('Please editor contenteditable block!');
+        return true;
+    }
+    return false;
+}
+
 var b6Click = function(self){
+    if(_checkEditable()) return;
     var div = document.createElement('div');
     div.textContent = 'new Div';
     getSelection().getRangeAt(0).insertNode(div)
 }
 
 var b7Click = function(self){
+    if(_checkEditable()) return;
     var span = document.createElement('span');
     span.textContent = 'new span';
     getSelection().getRangeAt(0).insertNode(span)
 }
 
 var b8Click = function(self){
+    if(_checkEditable()) return;
     var select = document.createElement('select');
     getSelection().getRangeAt(0).insertNode(select)
     var option = document.createElement('option');
@@ -115,6 +127,7 @@ var b8Click = function(self){
 }
 
 var b9Click = function(self){
+    if(_checkEditable()) return;
     var input = document.createElement('input');
     getSelection().getRangeAt(0).insertNode(input)
 }
