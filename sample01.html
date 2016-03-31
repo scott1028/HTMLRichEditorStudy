@@ -23,6 +23,9 @@
     <button onclick="b9Click(this)">Insert input at Cursor Position</button>
     <br />
     <br />
+    <button onclick="preview(this)">Preview</button>
+    <br />
+    <br />
 
     <!-- My Editor -->
     <div contenteditable style="width: 600px; height: 200px; background-color: lightgrey; word-wrap:break-word; padding: 5px; overflow-y: auto; margin: 5px;">
@@ -36,6 +39,8 @@
     </div>
 
     <br />
+
+    <pre></pre>
 
     <textarea style="width: 800px; height: 200px;"></textarea>
 
@@ -130,6 +135,10 @@ var b9Click = function(self){
     if(_checkEditable()) return;
     var input = document.createElement('input');
     getSelection().getRangeAt(0).insertNode(input)
+}
+
+var preview = function(self){
+    document.querySelector('pre').textContent = document.querySelector('div[contenteditable]').innerHTML;
 }
 
 </script>
