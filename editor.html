@@ -13,6 +13,16 @@
     <button onclick="b3Click(this)">Small Size</button>
     <button onclick="b4Click(this)">Set to Red</button>
     <button onclick="b5Click(this)">Set to Blue</button>
+    <br />
+    <br />
+    <label>編輯問卷</label>
+    <br />
+    <button onclick="b6Click(this)">Insert div at Cursor Position</button>
+    <button onclick="b7Click(this)">Insert span at Cursor Position</button>
+    <button onclick="b8Click(this)">Insert select at Cursor Position</button>
+    <button onclick="b9Click(this)">Insert input at Cursor Position</button>
+    <br />
+    <br />
 
     <!-- My Editor -->
     <div contenteditable style="width: 600px; height: 200px; background-color: lightgrey; word-wrap:break-word; padding: 5px; overflow-y: auto; margin: 5px;">
@@ -81,6 +91,32 @@ var b4Click = function(self){
 //
 var b5Click = function(self){
     document.execCommand('foreColor', false, 'blue');
+}
+
+var b6Click = function(self){
+    var div = document.createElement('div');
+    div.textContent = 'new Div';
+    getSelection().getRangeAt(0).insertNode(div)
+}
+
+var b7Click = function(self){
+    var span = document.createElement('span');
+    span.textContent = 'new span';
+    getSelection().getRangeAt(0).insertNode(span)
+}
+
+var b8Click = function(self){
+    var select = document.createElement('select');
+    getSelection().getRangeAt(0).insertNode(select)
+    var option = document.createElement('option');
+    option.value = 'test-1';
+    option.label = 'test-1#';
+    select.appendChild(option);
+}
+
+var b9Click = function(self){
+    var input = document.createElement('input');
+    getSelection().getRangeAt(0).insertNode(input)
 }
 
 </script>
