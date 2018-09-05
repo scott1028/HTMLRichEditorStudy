@@ -2,20 +2,27 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <script src="jquery-3.3.1.js" type="text/javascript"></script>
     </head>
     <body>
-        <div id="main" contenteditable="true" 
+        Hello World!!
+        <div id="main"
+             onclick="onClick(event);"
              style="border:solid 1px black; width:300px; height:300px">
+
+             3213213213
+             3123
+
             <div>Hello world!</div>
             <div>
                 <br>
             </div>
             <div>This is a paragraph</div>
-            <div>3213213</div>
-            <div>3213213</div>
-            <div>3213213</div>
+            <div>3213213a</div>
+            <div>3213213b</div>
+            <div>3213213c</div>
             <table border=1>
-              <caption contenteditable="false">My Table</caption>
+              <caption contenteditable="false">My Table<button class="onClick">Pick</button></caption>
               <tr>
                 <td>3213</td>
                 <td>3213</td>
@@ -23,10 +30,25 @@
             </table>
             <div>3213213</div>
         </div>
-        <button onclick="onClick();">Create Selection Range</button>
+        <button class="onClick" onclick="onClick(event);">Create Selection Range</button>
     </body>
     <script>
-      var onClick = () => {
+      var onClick = e => {
+        if(!e.target.classList.contains('onClick'))
+          return (() => {
+            $('#cursor').remove();
+            // console.log(11);
+            var caret = getSelection().getRangeAt(0);
+            var cursor = document.createElement("span");
+            cursor.id = 'cursor';
+            $(cursor).css({
+              position: 'absolute',
+              border: '0.5px solid #333',
+              height: caret.getClientRects()[0].height,
+            });
+            caret.insertNode(cursor);
+          })();
+
         var mainDiv = document.getElementById("main");
         // var startNode = document.querySelector('#main > div:nth-child(4)').childNodes[0];
         var startNode = document.querySelector('#main > table').previousSibling;
@@ -39,9 +61,50 @@
         range.setEnd(endNode, endNode.childNodes.length);  // all over the end node
         
         var sel = window.getSelection();
-        sel.removeAllRanges();
+        // sel.removeAllRanges();
         sel.addRange(range);
         console.log(range);
       };
+
+      {
+        // auto format;
+        tick = () => {
+          var treeWalker = document.createTreeWalker(
+            document.getElementById("main"),
+            NodeFilter.SHOW_TEXT,
+            { acceptNode: function(node) { return NodeFilter.FILTER_ACCEPT; } },
+            false
+          );
+
+          var nodeList = [];
+
+          while(treeWalker.nextNode()){
+            nodeList.push(treeWalker.currentNode);
+          }
+
+          nodeList.forEach(d => {
+            if(d.nodeType === Node.TEXT_NODE && d.parentNode.id === 'main') {
+              var span = document.createElement("span");
+              span.appendChild(d.cloneNode(true));
+              d.parentNode.insertBefore(span, d);
+              d.remove();
+            }
+          });
+
+          if(parseInt(new Date().getTime() / 100).toString().match(/(?:[1-5])$/) === null) {
+            $('#cursor').css({
+              border: '0.5px solid white',
+            });
+          }
+          else {
+            $('#cursor').css({
+              border: '0.5px solid #333',
+            }); 
+          };
+
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
     </script>
 </html>
