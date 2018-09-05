@@ -4,6 +4,7 @@
 <head>
     <title></title>
     <script src="../nicEdit/nicEdit.js" type="text/javascript"></script>
+    <script src="jquery-3.3.1.js" type="text/javascript"></script>
     <script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
 </head>
 
@@ -21,6 +22,7 @@
     <button onclick="b7Click(this)">Insert span at Cursor Position</button>
     <button onclick="b8Click(this)">Insert select at Cursor Position</button>
     <button onclick="b9Click(this)">Insert input at Cursor Position</button>
+    <button onclick="b10Click(this)">Insert table at Cursor Position</button>
     <br />
     <br />
     <button onclick="preview(this)">Preview</button>
@@ -117,14 +119,14 @@ var b6Click = function(self){
     if(_checkEditable()) return;
     var div = document.createElement('div');
     div.textContent = 'new Div';
-    getSelection().getRangeAt(0).insertNode(div)
+    getSelection().getRangeAt(0).insertNode(div);
 }
 
 var b7Click = function(self){
     if(_checkEditable()) return;
     var span = document.createElement('span');
     span.textContent = 'new span';
-    getSelection().getRangeAt(0).insertNode(span)
+    getSelection().getRangeAt(0).insertNode(span);
 }
 
 var b8Click = function(self){
@@ -140,7 +142,31 @@ var b8Click = function(self){
 var b9Click = function(self){
     if(_checkEditable()) return;
     var input = document.createElement('input');
-    getSelection().getRangeAt(0).insertNode(input)
+    getSelection().getRangeAt(0).insertNode(input);
+}
+
+var b10Click = function(self){
+    if(_checkEditable()) return;
+    let style = `border: 1px solid #333;`;
+    let tbl = $(`
+        <table style="${style}">
+            <tr>
+                <th style="${style}"></th>
+                <th style="${style}"></th>
+                <th style="${style}"></th>
+                <th style="${style}"></th>
+                <th style="${style}"></th>
+            </tr>
+            <tr>
+                <td style="${style}"></td>
+                <td style="${style}"></td>
+                <td style="${style}"></td>
+                <td style="${style}"></td>
+                <td style="${style}"></td>
+            </tr>
+        </table>
+    `);
+    getSelection().getRangeAt(0).insertNode(tbl[0]);
 }
 
 var preview = function(self){
