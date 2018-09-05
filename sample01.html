@@ -24,6 +24,7 @@
     <button onclick="b9Click(this)">Insert input at Cursor Position</button>
     <button onclick="b10Click(this)">Insert table at Cursor Position</button>
     <br />
+    <button onclick="b11Click(this)">Format Selection Range to span</button>
     <br />
     <button onclick="preview(this)">Preview</button>
     <br />
@@ -65,6 +66,7 @@
         ref: https://developer.mozilla.org/en-US/docs/Web/API/Text/splitText (splitText 把 textNode 拆開分別控制)
         # 真正寫編輯器設定樣式用到的核心 Method
         (*)ref: https://developer.mozilla.org/zh-CN/docs/Web/API/Document/execCommand
+        (*)Trace this code ref: https://github.com/summernote/summernote/blob/develop/dist/summernote.js
     </pre>
     <h4>Drop/Drag API Test</h4>
     <div testdrop style="width: 50px; height: 50px; border-color: red; border-width: 1px; border-style: solid;"></div>
@@ -79,19 +81,23 @@ var b1Click = function(self){
 
 //
 var b2Click = function(self){
+    document.execCommand('styleWithCSS', false, true);
     document.execCommand('fontsize', false, 3);
+    document.execCommand('styleWithCSS', false, false);
 }
 
 
 //
 var b3Click = function(self){
-    document.execCommand('fontsize', false, 1);
+    document.execCommand('fontsize', false, 1);  // default use font tag to style DOM
 }
 
 
 //
 var b4Click = function(self){
+    document.execCommand('styleWithCSS', false, true);  // use span with css to style DOM
     document.execCommand('foreColor', false, 'red');
+    document.execCommand('styleWithCSS', false, false);
 }
 
 
@@ -167,6 +173,13 @@ var b10Click = function(self){
         </table>
     `);
     getSelection().getRangeAt(0).insertNode(tbl[0]);
+}
+
+var b11Click = function(self){
+    var isMSIE = false;
+    var tagName = 'p';
+    tagName = isMSIE ? '<' + tagName + '>' : tagName;
+    document.execCommand('FormatBlock', false, tagName);
 }
 
 var preview = function(self){
