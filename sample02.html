@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    </head>
+    <body>
+        <div id="main" contenteditable="true" 
+             style="border:solid 1px black; width:300px; height:300px">
+            <div>Hello world!</div>
+            <div>
+                <br>
+            </div>
+            <div>This is a paragraph</div>
+            <div>3213213</div>
+            <div>3213213</div>
+            <div>3213213</div>
+            <table border=1>
+              <caption contenteditable="false">My Table</caption>
+              <tr>
+                <td>3213</td>
+                <td>3213</td>
+              </tr>
+            </table>
+            <div>3213213</div>
+        </div>
+        <button onclick="onClick();">Create Selection Range</button>
+    </body>
+    <script>
+      var onClick = () => {
+        var mainDiv = document.getElementById("main");
+        // var startNode = document.querySelector('#main > div:nth-child(4)').childNodes[0];
+        var startNode = document.querySelector('#main > table').previousSibling;
+        // var endNode = document.querySelector('#main > div:nth-child(6)').childNodes[0];
+        var endNode = document.querySelector('#main > table');
+
+        var range = document.createRange();
+        
+        range.setStart(endNode, 0);  // from startNode childNodes[0]
+        range.setEnd(endNode, endNode.childNodes.length);  // all over the end node
+        
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        console.log(range);
+      };
+    </script>
+</html>
