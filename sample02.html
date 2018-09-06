@@ -7,11 +7,17 @@
     <body>
         Hello World!!
         <div id="main"
-             onclick="onClick(event);"
+             onselectstart="return false;"
+             onclick="cursor(event);"
+             onmousedown="onMouseDown(event);"
              style="border:solid 1px black; width:300px; height:300px">
 
              3213213213
              3123
+
+            <span><span><span>XXXXXX</span></span></span>
+
+            <div>TT<div>YYYY</div>TT</div>
 
             <div>Hello world!</div>
             <div>
@@ -31,16 +37,62 @@
             <div>3213213</div>
         </div>
         <button class="onClick" onclick="onClick(event);">Create Selection Range</button>
+        <pre>
+          Ref: https://stackoverflow.com/questions/23831611/html-text-in-block-element-get-exact-position-of-click
+        </pre>
     </body>
     <script>
-      var onClick = e => {
+      // event-Start -> event-End
+      var selectedRangeCreator = (es, cb = range => {}) => {
+        // Ref: https://developer.mozilla.org/en-US/docs/Web/API/Selection/addRange
+        // Ref: https://stackoverflow.com/questions/23831611/html-text-in-block-element-get-exact-position-of-click
+        var range = document.caretRangeFromPoint(es.pageX, es.pageY);
+        var textNode = range.startContainer;
+        var offset = range.startOffset;
+
+        // simulate selection
+        $('body').off('mouseup').on('mouseup', ee => {
+          var range2 = document.caretRangeFromPoint(ee.pageX, ee.pageY);
+          var textNode2 = range2.startContainer;
+          var offset2 = range2.startOffset;
+
+          // prepare a selected range fd
+          var rangeNew;
+          if(es.pageY > ee.pageY) {
+            rangeNew = document.createRange();
+            range.setStart(textNode2, offset2);
+            range.setEnd(textNode, offset);
+          }
+          else if(es.pageX > ee.pageX) {
+            // for measure position
+            // var caret = document.caretRangeFromPoint(e.pageX, e.pageY);
+
+            rangeNew = document.createRange();
+            range.setStart(textNode, offset);
+            range.setEnd(textNode2, offset2);
+          }
+          else {
+            rangeNew = document.createRange();
+            range.setStart(textNode, offset);
+            range.setEnd(textNode2, offset2);
+          }
+          cb(range);
+        });
+      };
+
+      var cursor = e => {
+        // event delegation design
         if(!e.target.classList.contains('onClick'))
           return (() => {
             $('#cursor').remove();
-            // console.log(11);
-            var caret = getSelection().getRangeAt(0);
+
+            // var caret = getSelection().getRangeAt(0);  // only for contenteditable type DOM
+            var caret = document.caretRangeFromPoint(e.pageX, e.pageY);  // for postion calculation result
+            
             var cursor = document.createElement("span");
             cursor.id = 'cursor';
+            if(caret.getClientRects().length === 0)
+              return;  // cursor can not be put here.
             $(cursor).css({
               position: 'absolute',
               border: '0.5px solid #333',
@@ -48,26 +100,19 @@
             });
             caret.insertNode(cursor);
           })();
+      };
 
-        var mainDiv = document.getElementById("main");
-        // var startNode = document.querySelector('#main > div:nth-child(4)').childNodes[0];
-        var startNode = document.querySelector('#main > table').previousSibling;
-        // var endNode = document.querySelector('#main > div:nth-child(6)').childNodes[0];
-        var endNode = document.querySelector('#main > table');
-
-        var range = document.createRange();
-        
-        range.setStart(endNode, 0);  // from startNode childNodes[0]
-        range.setEnd(endNode, endNode.childNodes.length);  // all over the end node
-        
-        var sel = window.getSelection();
-        // sel.removeAllRanges();
-        sel.addRange(range);
-        console.log(range);
+      var onMouseDown = es => {
+        $('#cursor').remove();  // remove current cursor first
+        selectedRangeCreator(es, range => {
+          var s = window.getSelection();
+          s.removeAllRanges();
+          s.addRange(range);
+        });
       };
 
       {
-        // auto format;
+        // auto format by `requestAnimationFrame`;
         tick = () => {
           var treeWalker = document.createTreeWalker(
             document.getElementById("main"),
@@ -83,10 +128,23 @@
           }
 
           nodeList.forEach(d => {
+            // append base span tag to pure text DOM node
             if(d.nodeType === Node.TEXT_NODE && d.parentNode.id === 'main') {
               var span = document.createElement("span");
               span.appendChild(d.cloneNode(true));
               d.parentNode.insertBefore(span, d);
+              d.remove();
+            }
+
+            // TODO recreate nodeDOM tree algorithm
+            // flat recursive node of span
+            if(d.nodeType === Node.TEXT_NODE &&
+               d.parentNode &&
+               d.parentNode.parentNode &&
+               d.parentNode.parentNode.nodeName === d.parentNode.nodeName &&
+               d.parentNode.parentNode.id !== 'main') {
+              d.parentNode.parentNode.appendChild(d.cloneNode(true));
+              d.parentNode.remove();
               d.remove();
             }
           });
