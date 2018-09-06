@@ -156,6 +156,12 @@ var b10Click = function(self){
     let style = `border: 1px solid #333;`;
     let tbl = $(`
         <table style="${style}">
+            <caption
+                class="dragable-anchor"
+                contenteditable="false"
+                onselectstart="return false;">
+                Drag
+            </caption>
             <tr>
                 <th style="${style}"></th>
                 <th style="${style}"></th>
@@ -173,6 +179,7 @@ var b10Click = function(self){
         </table>
     `);
     getSelection().getRangeAt(0).insertNode(tbl[0]);
+    getSelection().removeAllRanges();
 }
 
 var b11Click = function(self){
@@ -197,5 +204,30 @@ var preview = function(self){
     document.querySelector('div[testdrop]').ondragover = function(e){
         e.preventDefault();
     };
+
+    {
+        let flag = false;
+        document.querySelector('div[contenteditable]').onmousedown = es => {
+            if(es.target.classList.contains('dragable-anchor')) {
+                var handler = ee => {
+                    var caret = document.caretRangeFromPoint(ee.pageX, ee.pageY);
+                    caret.insertNode(obj);
+                    document.querySelector('div[contenteditable]').onmouseup = null;
+                };
+                var obj = es.target.parentElement;
+                flag = true;
+                document.querySelector('div[contenteditable]').onselectstart = () => false;
+                document.querySelector('div[contenteditable]').onmouseup = handler;
+            }
+        };
+
+        document.onmouseup = e => {
+            if(flag) {
+                flag = false;
+                document.querySelector('div[contenteditable]').onselectstart = null;
+                document.querySelector('div[contenteditable]').onmouseup = null;
+            }
+        };
+    }
 </script>
 </html>
