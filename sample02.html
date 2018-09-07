@@ -68,12 +68,9 @@
     </body>
     <script>
       var inputText = e => {
-        // e.preventDefault();
-        // debugger;
-        // $('#cursor');
         console.log(e);
-        $(`<span>${e.data}</span>`).insertAfter($('#cursor'))
-        // e.target.value = '';
+        $(document.createTextNode(`${e.data}`)).insertAfter($('#cursor'))
+        e.target.value = '';
       }
 
       var pickTable = e => {
