@@ -28,42 +28,69 @@
         <br />
         <br />
         Hello World!!
-        <div id="main"
-             onselectstart="return false;"
-             onclick="cursor(event);"
-             onmousedown="onMouseDown(event);"
-             style="border:solid 1px black; width:300px; height:300px">
+        <div>
+          <div id="main"
+               onselectstart="return false;"
+               onclick="cursor(event);"
+               onmousedown="onMouseDown(event);"
+               style="border:solid 1px black; width:300px; height:300px">
 
-             3213213213
-             3123
+               3213213213
+               3123
 
-            <span><span><span>XXXXXX</span></span></span>
+              <span><span><span>XXXXXX</span></span></span>
 
-            <div>TT<div>YYYY</div>TT</div>
+              <div>TT<div>YYYY</div>TT</div>
 
-            <div>Hello world!</div>
-            <div>
-                <br>
-            </div>
-            <div>This is a paragraph</div>
-            <div>3213213a</div>
-            <div>3213213b</div>
-            <div>3213213c</div>
-            <table border=1>
-              <caption contenteditable="false">My Table<button class="onClick">Pick</button></caption>
-              <tr>
-                <td>3213</td>
-                <td>3213</td>
-              </tr>
-            </table>
-            <div>3213213</div>
+              <div>Hello world!</div>
+              <div>
+                  <br>
+              </div>
+              <div>This is a paragraph</div>
+              <div>3213213a</div>
+              <div>3213213b</div>
+              <div>3213213c</div>
+              <table border=1>
+                <caption contenteditable="false">My Table<button class="onClick table">Pick</button></caption>
+                <tr>
+                  <td>3213</td>
+                  <td>3213</td>
+                </tr>
+              </table>
+              <div>3213213</div>
+          </div>
+          <button class="onClick" onclick="onClick(event);">Create Selection Range</button>
+          <textarea id="input-catcher" oninput="inputText(event);"></textarea>
+          <pre>
+            Ref: https://stackoverflow.com/questions/23831611/html-text-in-block-element-get-exact-position-of-click
+          </pre>
         </div>
-        <button class="onClick" onclick="onClick(event);">Create Selection Range</button>
-        <pre>
-          Ref: https://stackoverflow.com/questions/23831611/html-text-in-block-element-get-exact-position-of-click
-        </pre>
     </body>
     <script>
+      var inputText = e => {
+        // e.preventDefault();
+        // debugger;
+        // $('#cursor');
+        console.log(e);
+        $(`<span>${e.data}</span>`).insertAfter($('#cursor'))
+        // e.target.value = '';
+      }
+
+      var pickTable = e => {
+        console.log(`click`);
+        if(!e.target.classList.contains('table'))
+          return;
+        let target = e.target;
+        while(target.nodeName !== 'TABLE') {
+          target = target.parentNode;
+        }
+        let range = document.createRange();
+        range.selectNode(target);
+        getSelection().removeAllRanges();
+        getSelection().addRange(range);
+        // e.stopImmediatePropagation();  // avoid event propagate to next same type named click event handler
+      }
+
       // event-Start -> event-End
       var selectedRangeCreator = (es, cb = range => {}) => {
         // Ref: https://developer.mozilla.org/en-US/docs/Web/API/Selection/addRange
@@ -103,6 +130,8 @@
       };
 
       var cursor = e => {
+        pickTable(e);
+
         // event delegation design
         if(!e.target.classList.contains('onClick'))
           return (() => {
@@ -121,16 +150,19 @@
               height: caret.getClientRects()[0].height,
             });
             caret.insertNode(cursor);
+            document.querySelector('#input-catcher').focus();
           })();
       };
 
       var onMouseDown = es => {
+        console.log(`onMouseDown`);
         $('#cursor').remove();  // remove current cursor first
         selectedRangeCreator(es, range => {
           var s = window.getSelection();
           s.removeAllRanges();
           s.addRange(range);
         });
+        // es.stopImmediatePropagation();
       };
 
       {
